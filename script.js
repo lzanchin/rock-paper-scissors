@@ -24,7 +24,6 @@ function getComputerChoice() {
     } else {
         choice = "SCISSORS";
     }
-    choice = "ROCK";
     console.log("Computer chooses: " + choice);    
     return choice;
 
