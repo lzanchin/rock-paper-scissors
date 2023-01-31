@@ -7,17 +7,6 @@ let computerScore = 0;
 const title = document.querySelector(".title");
 const resultsContainer = document.querySelector("#results");
 
-
-function getUserChoice(choice) {
-    let option = choice;
-    do {
-        option = prompt("Type your option: ROCK, PAPER or SCISSORS");
-        option = option.toUpperCase();        
-    } while (option != "ROCK" && option != "PAPER" && option != "SCISSORS");
-    console.log("Player chooses: " + option);
-    return option;
-}
-
 function getComputerChoice() {
     // get a random number between 1 and 3    
     let number = Math.floor(Math.random() * (3-1 + 1) + 1);
@@ -30,8 +19,7 @@ function getComputerChoice() {
         choice = "PAPER";
     } else {
         choice = "SCISSORS";
-    }
-    console.log("Computer chooses: " + choice);    
+    }    
     return choice;    
 }
 
@@ -69,8 +57,7 @@ function displayResults(playerScore, computerScore) {
     content.append(resultsTitle);
 
     const participantsResult = document.createElement("p");
-    participantsResult.textContent = `Player Score: ${playerScore} \n
-    Computer Score: ${computerScore}`;
+    participantsResult.textContent = `Player Score: ${playerScore} \n Computer Score: ${computerScore}`;
     content.append(participantsResult);
     content.append(line);
 
@@ -82,33 +69,27 @@ function displayResults(playerScore, computerScore) {
         title.textContent = `GAME OVER - Player: ${playerScore}, Computer: ${computerScore}`;        
         buttons.forEach(button => {
             button.style.display = "none";
-        })
-    };
-    const finalResult = document.createElement("p");
-    if (playerScore > computerScore) {
-        finalResult.textContent = "YOU WON!!";        
-    } else {
-        finalResult.textContent = "YOU LOST!! Best luck next time.";
-    }
-    resultsContainer.append(finalResult);
+        });
+        const finalResult = document.createElement("p");
+        if (playerScore > computerScore) {
+            finalResult.textContent = "YOU WON!!";        
+        } else {
+            finalResult.textContent = "YOU LOST!! Best luck next time.";
+        }
+        resultsContainer.append(finalResult);
+    };      
 };
 
 function game(option){        
-    rounds += 1; // remove logic for 5 rounds
-    let roundResult;
-    console.log("........Starting a new game........");
-    console.log("Player chooses: " + option);
+    rounds += 1;
+    let roundResult;    
 
     roundResult =playRound(option, getComputerChoice());
         if (roundResult.includes("You win")) {
             playerScore++;            
         } else if (roundResult.includes("You lost")) {
             computerScore++;            
-        } else {
-            console.log("Draw");
-        }
-        console.log("Player Score: " + playerScore)
-        console.log("Computer Score: " + computerScore);    
+        }      
 
     displayResults(playerScore, computerScore);
         
