@@ -1,8 +1,15 @@
 let playerSelection;
 let computerSelection;
+let rounds = 0;
+let playerScore = 0;
+let computerScore = 0;    
 
-function getUserChoice() {
-    let option;
+const title = document.querySelector(".title");
+const resultsContainer = document.querySelector("#results");
+
+
+function getUserChoice(choice) {
+    let option = choice;
     do {
         option = prompt("Type your option: ROCK, PAPER or SCISSORS");
         option = option.toUpperCase();        
@@ -25,14 +32,13 @@ function getComputerChoice() {
         choice = "SCISSORS";
     }
     console.log("Computer chooses: " + choice);    
-    return choice;
-
-    // test return values
-    // return "ROCK"
+    return choice;    
 }
 
 function playRound(playerSelection, computerSelection){
     let result;
+    const roundDetails = document.createElement("div");
+    const roundDescription = document.createElement("p");
     if (playerSelection == computerSelection) {
         result = "Draw";
     } else if (playerSelection == "ROCK" && computerSelection == "SCISSORS") {
@@ -48,32 +54,52 @@ function playRound(playerSelection, computerSelection){
     } else if (playerSelection == "SCISSORS" && computerSelection == "ROCK"){
         result = "You lost, " + computerSelection + " beats " + playerSelection;
     }
+    roundDescription.textContent = result;
+    roundDetails.append(roundDescription);
+    resultsContainer.append(roundDetails);
     return result;    
 }
 
-function displayResults(playerScore, computerScore){
-    console.log("........Checking results........")
-    console.log("Player Score: " + playerScore)
-    console.log("Computer Score: " + computerScore);        
-    if (playerScore > computerScore) {
-        console.log("YOU WON!!");        
-    } else if (playerScore < computerScore) {
-        console.log("YOU LOST!! Best luck next time.");
-    } else {
-        console.log("THE GAME FINISHED WITH A DRAW.")
-    }
-}
+function displayResults(playerScore, computerScore) {
+    const content = document.createElement("div");
+    const line = document.createElement("hr");
 
-function game(){
-    let playerScore = 0;
-    let computerScore = 0;    
-    let roundsLeft = 5;
+    const resultsTitle = document.createElement("h3");
+    resultsTitle.textContent = `Checking results for round ${rounds}`;
+    content.append(resultsTitle);
+
+    const participantsResult = document.createElement("p");
+    participantsResult.textContent = `Player Score: ${playerScore} \n
+    Computer Score: ${computerScore}`;
+    content.append(participantsResult);
+    content.append(line);
+
+    resultsContainer.append(content);
+
+    title.textContent = `Round ${rounds+1} - Player: ${playerScore}, Computer: ${computerScore}`;    
+
+    if (playerScore >= 5 || computerScore >= 5) {
+        title.textContent = `GAME OVER - Player: ${playerScore}, Computer: ${computerScore}`;        
+        buttons.forEach(button => {
+            button.style.display = "none";
+        })
+    };
+    const finalResult = document.createElement("p");
+    if (playerScore > computerScore) {
+        finalResult.textContent = "YOU WON!!";        
+    } else {
+        finalResult.textContent = "YOU LOST!! Best luck next time.";
+    }
+    resultsContainer.append(finalResult);
+};
+
+function game(option){        
+    rounds += 1; // remove logic for 5 rounds
     let roundResult;
-    console.log("........Starting a new game........")
-    for (let i = 1; i < 6; i++) {                
-        console.log("========== Round " + i + " ==========");
-        // if the game continues, then play another round
-        roundResult =playRound(getUserChoice(), getComputerChoice());
+    console.log("........Starting a new game........");
+    console.log("Player chooses: " + option);
+
+    roundResult =playRound(option, getComputerChoice());
         if (roundResult.includes("You win")) {
             playerScore++;            
         } else if (roundResult.includes("You lost")) {
@@ -82,14 +108,15 @@ function game(){
             console.log("Draw");
         }
         console.log("Player Score: " + playerScore)
-        console.log("Computer Score: " + computerScore);
+        console.log("Computer Score: " + computerScore);    
 
-        // check if the game is finished        
-        if (roundsLeft <= (playerScore - computerScore) || roundsLeft <= (computerScore - playerScore)) {
-            break;
-        }
-        roundsLeft--;        
-    }
-    displayResults(playerScore, computerScore);    
-}
-game();
+    displayResults(playerScore, computerScore);
+        
+};
+
+let buttons = document.querySelectorAll('button');
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        game(button.id.toUpperCase());
+    });
+});
